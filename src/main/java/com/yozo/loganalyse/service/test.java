@@ -2,52 +2,95 @@ package com.yozo.loganalyse.service;
 
 
 
+import com.yozo.loganalyse.pojo.Record;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Slf4j
 public class test {
 
+    static List<Record> records=new ArrayList<>();
+
     //日志正则表达式模板
     @Value("logParttern")
-    public String logPattern="(?<time>^\\d{4}-[a-zA-Z]{3,4}-\\d{1,2}\\s\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{0,3})\\s(?<loglevel>[A-Z]{2,8})\\s\\s\\[(?<threadNo>[\\w\\d-]+)\\]\\s(?<class>(?:[a-zA-Z$_][a-zA-Z$_0-9]*\\.)*[a-zA-Z$_][a-zA-Z$_0-9]*)\\s-\\s(?<sessionId>[A-Z\\d]{32}),\\s(?<requestMethod>\\b[a-zA-Z]+\\b),\\suserId=(?<userId>\\d+),\\sapp=(?<app>[a-z|A-Z]+),\\sip=(?<ip>(?<![0-9])(?:(?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))(?![0-9])),\\s(?<stateCode>\\d+),\\sHost=(?<host>\\b(?:[0-9A-Za-z][0-9A-Za-z-]{0,62})(?:\\.(?:[0-9A-Za-z][0-9A-Za-z-]{0,62}))*(\\.?|\\b)),\\sReferer=(?<referer>\\b\\w+\\b),\\sUser-Agent=(?<userAgent>[^,\\s\\n\\t]+)\\s(?<environment>[^,\\s\\n\\t]+),\\suri=(?<uri>(?:/[A-Za-z0-9$.+!*'(){},~:;=@#%&_\\-]*)+)";
+    public static String logPattern="(?<time>^\\d{4}-[a-zA-Z]{3,4}-\\d{1,2}\\s\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{0,3})\\s(?<loglevel>[A-Z]{2,8})\\s\\s\\[(?<threadNo>[\\w\\d-]+)\\]\\s(?<class>(?:[a-zA-Z$_][a-zA-Z$_0-9]*\\.)*[a-zA-Z$_][a-zA-Z$_0-9]*)\\s-\\s(?<sessionId>[A-Z\\d]{32}),\\s(?<requestMethod>\\b[a-zA-Z]+\\b),\\suserId=(?<userId>\\d+),\\sapp=(?<app>[a-z|A-Z]+),\\sip=(?<ip>(?<![0-9])(?:(?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5])[.](?:[0-1]?[0-9]{1,2}|2[0-4][0-9]|25[0-5]))(?![0-9])),\\s(?<stateCode>\\d+),\\sHost=(?<host>\\b(?:[0-9A-Za-z][0-9A-Za-z-]{0,62})(?:\\.(?:[0-9A-Za-z][0-9A-Za-z-]{0,62}))*(\\.?|\\b)),\\sReferer=(?<referer>\\b\\w+\\b),\\sUser-Agent=(?<userAgent>[^,\\s\\n\\t]+)\\s(?<environment>[^,\\s\\n\\t]+),\\suri=(?<uri>(?:/[A-Za-z0-9$.+!*'(){},~:;=@#%&_\\-]*)+)";
 
-    @Test
-    public void test(){
-        String logRow="2019-May-23 08:37:05.398 INFO  [http-nio-8090-exec-14] c.y.a.c.UaaRequestLoggingFilter - D3D8C3BAAA443F535ED98E119813D0E1, GET, userId=95780, app=null, ip=119.187.150.179, 200, Host=auth.yozocloud.cn, Referer=null, User-Agent=Apache-HttpClient/4.4.1 (Java/1.8.0_172), uri=/api/account/avatar?userId=95780\n";
-        checkLog(logPattern,logRow);
+    public static void main(String[] args) {
+        getCertainLineOfTxt("F:\\日志分析\\auth3.log" , 0);
+        log.error(records+"");
+        log.info(records.size()+"");
+        getCertainLineOfTxt("F:\\日志分析\\auth4.log" , 0);
+        log.error(records+"");
+        log.info(records.size()+"");
     }
 
     /**
      * 一条日志分析
      */
-    public  void checkLog(String pattern,String logRow){
-        log.info("日志分析");
+    public static void checkLog(String pattern,String logRow) throws ParseException {
         Pattern r = Pattern.compile(pattern);
         Matcher m = r.matcher(logRow);
-       if(m.find()){
-           System.out.printf("time:\t%s\n",m.group("time"));
-           System.out.printf("loglevel:\t%s\n",m.group("loglevel"));
-           System.out.printf("threadNo:\t%s\n",m.group("threadNo"));
-           System.out.printf("class:\t%s\n",m.group("class"));
-           System.out.printf("sessionId:\t%s\n",m.group("sessionId"));
-           System.out.printf("request_method:\t%s\n",m.group("requestMethod"));
-           System.out.printf("userId:\t%s\n",m.group("userId"));
-
-           System.out.printf("app:\t%s\n",m.group("app"));
-           System.out.printf("ip:\t%s\n",m.group("ip"));
-           System.out.printf("stateCode:\t%s\n",m.group("stateCode"));
-           System.out.printf("host:\t%s\n",m.group("host"));
-
-           System.out.printf("referer:\t%s\n",m.group("referer"));
-           System.out.printf("userAgent:\t%s\n",m.group("userAgent"));
-           System.out.printf("environment:\t%s\n",m.group("environment"));
-           System.out.printf("uri:\t%s\n",m.group("uri"));
-       }
-
+        if(m.find()){
+            Record record=new Record();
+            record.setApp(m.group("app"));
+            record.setIp(m.group("ip"));
+            record.setUserId(m.group("userId"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss.SSS", Locale.US);
+            record.setTime(sdf.parse(m.group("time")));
+            records.add(record);
+        }
     }
+
+    public static void getCertainLineOfTxt(String filePath, int lineNumber) {
+        FileReader fr = null;
+        LineNumberReader reader = null;
+        String txt = "";
+
+        try {
+            File file = new File(filePath);
+            fr = new FileReader(file);
+            reader = new LineNumberReader(fr);
+
+            int lines = 0;
+
+            while (txt != null) {
+                lines++;
+
+                txt = reader.readLine();
+
+                if (lines > lineNumber&&txt!=null) {
+
+                    checkLog(logPattern,txt);
+                }
+            }
+            log.info("当前行数："+reader.getLineNumber());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                fr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
