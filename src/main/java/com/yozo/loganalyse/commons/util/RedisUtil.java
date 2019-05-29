@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 @Component
 public class RedisUtil {
 
+    @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {

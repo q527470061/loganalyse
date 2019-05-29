@@ -23,4 +23,9 @@ public class RedisCache implements Cache {
     public int readLastLine(String key) {
         return (int) redisUtil.get(key);
     }
+
+    @Override
+    public boolean existKey(String key) {
+        return redisUtil.hasKey(key);
+    }
 }

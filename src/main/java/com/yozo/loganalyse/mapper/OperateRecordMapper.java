@@ -4,7 +4,9 @@ import com.yozo.loganalyse.pojo.OperateRecord;
 import com.yozo.loganalyse.pojo.OperateRecordExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface OperateRecordMapper {
     int countByExample(OperateRecordExample example);
 

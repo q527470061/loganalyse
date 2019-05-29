@@ -7,9 +7,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.PropertySource;
 
-@Cacheable
 @MapperScan(basePackages = "com.yozo.loganalyse.mapper")
-@PropertySource(value = {"classpath:logParttern.properties"})
+@PropertySource(value = {"classpath:logParttern.properties","classpath:Common.properties"})
 @SpringBootApplication
 public class LoganalyseApplication {
 

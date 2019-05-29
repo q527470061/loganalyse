@@ -2,6 +2,8 @@ package com.yozo.loganalyse.service.cache;
 
 /**
  * 暂存临时数据
+ *
+ *
  */
 public interface Cache {
 
@@ -20,4 +22,6 @@ public interface Cache {
      * @return
      */
     int readLastLine(String key);
+
+    boolean existKey(String key);
 }

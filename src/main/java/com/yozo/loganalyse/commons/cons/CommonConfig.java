@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public interface CommonConfig {
 
     String SSO1_LOG_PATH="F:\\log\\auth3.log";
-    String SSO2_LOG_PATH="F:\\log\\auth3.log";
+    String SSO2_LOG_PATH="F:\\log\\auth4.log";
 
     /**
      * 所有文件读取

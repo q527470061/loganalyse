@@ -1,14 +1,15 @@
 package com.yozo.loganalyse.service.logcollect.impl;
 
+import com.yozo.loganalyse.commons.cons.CommonConstant;
 import com.yozo.loganalyse.commons.cons.SelfPattern;
+import com.yozo.loganalyse.commons.util.CommonUtils;
 import com.yozo.loganalyse.pojo.OperateRecord;
-import com.yozo.loganalyse.pojo.Record;
+import com.yozo.loganalyse.service.cache.Cache;
 import com.yozo.loganalyse.service.logcollect.LogCollect;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.text.DateFormat;
@@ -26,6 +27,8 @@ public class FirstCollectStyle implements LogCollect {
 
     //日志正则表达式模板
     private String logPattern=SelfPattern.LOGPATTERN_SSO_OPERATE;
+    @Autowired
+    private Cache cache;
 
     @Override
     public void checkLog(String pattern, String logRow,List<OperateRecord> records) throws ParseException {
@@ -47,7 +50,6 @@ public class FirstCollectStyle implements LogCollect {
     @Override
     public void getCertainLineOfTxt(String filePath, int lineNumber,List<OperateRecord> records) {
         String txt = "";
-
         try (LineNumberReader reader=new LineNumberReader(new FileReader(new File(filePath)))) {
             int lines = 0;
             while (txt != null) {
@@ -57,8 +59,11 @@ public class FirstCollectStyle implements LogCollect {
                     checkLog(logPattern,txt,records);
                 }
             }
-            log.info("当前行数："+reader.getLineNumber());
-            // 记录当前读取行数
+            // 记录读取行数
+            int currentLine=reader.getLineNumber();
+            String key=CommonUtils.generateKey(filePath);
+            log.info("--------------------------读取文件：{}-------当前行数：{}-------------------------------",filePath,currentLine);
+            cache.saveLine(key,currentLine,CommonConstant.LOGFileEXPIRETIME);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -66,6 +71,15 @@ public class FirstCollectStyle implements LogCollect {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void test(){
+        String str="F:\\log\\auth3.log";
+        DateFormat df = DateFormat.getDateInstance();
+        String key=df.format(new Date())+"-"+str;
+        //File file=new File(str);
+        System.out.println(1000*60*30);
     }
 
 }
