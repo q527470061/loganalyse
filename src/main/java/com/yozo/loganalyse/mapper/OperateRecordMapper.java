@@ -27,4 +27,12 @@ public interface OperateRecordMapper {
     int updateByPrimaryKeySelective(OperateRecord record);
 
     int updateByPrimaryKey(OperateRecord record);
+
+    /**
+    * @description 以key:date-userId-app-ip,查询record
+    * @author qinweiliang
+    * @param [operateRecord]
+    * @return com.yozo.loganalyse.pojo.OperateRecord
+    */
+    OperateRecord selectByComplexKeyAndDay(OperateRecord operateRecord);
 }
