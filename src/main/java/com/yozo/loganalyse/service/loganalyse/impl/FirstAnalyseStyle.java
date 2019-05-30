@@ -3,7 +3,7 @@ package com.yozo.loganalyse.service.loganalyse.impl;
 import com.yozo.loganalyse.commons.cons.CommonConfig;
 import com.yozo.loganalyse.commons.cons.CommonConstant;
 import com.yozo.loganalyse.commons.util.CommonUtils;
-import com.yozo.loganalyse.mapper.OperateRecordMapper;
+import com.yozo.loganalyse.dao.OperateRecordDao;
 import com.yozo.loganalyse.pojo.OperateRecord;
 import com.yozo.loganalyse.service.cache.Cache;
 import com.yozo.loganalyse.service.loganalyse.LogAnalyse;
@@ -24,7 +24,7 @@ import java.util.List;
 public class FirstAnalyseStyle implements LogAnalyse {
 
     @Autowired
-    private OperateRecordMapper operateRecordMapper;
+    private OperateRecordDao operateRecordDao;
     @Autowired
     private LogCollect logCollect;
     @Autowired
@@ -59,15 +59,11 @@ public class FirstAnalyseStyle implements LogAnalyse {
      * @param record
      */
     public void writeRecord(OperateRecord record){
-        OperateRecord operateRecord=operateRecordMapper.selectByComplexKeyAndDay(record);
+        OperateRecord operateRecord=operateRecordDao.selectByComplexKeyAndDay(record);
         // 数据库不存在记录
         if (null==operateRecord){
             record.setOnlineTime(0L);
-            try{
-                operateRecordMapper.insert(record);
-            }catch (Exception e){
-                log.error("com.yozo.loganalyse.service.loganalyse.impl.FirstAnalyseStyle.writeRecord--ERROR:{}",e);
-            }
+            operateRecordDao.insert(record);
             return;
         }
 
@@ -78,10 +74,6 @@ public class FirstAnalyseStyle implements LogAnalyse {
             operateRecord.setOnlineTime(operateRecord.getOnlineTime()+timeDifference);
         }
         operateRecord.setLastAccessTime(record.getLastAccessTime());
-        try{
-            operateRecordMapper.updateByPrimaryKeySelective(operateRecord);
-        }catch (Exception e){
-            log.error("com.yozo.loganalyse.service.loganalyse.impl.FirstAnalyseStyle.writeRecord--ERROR:{}",e);
-        }
+        operateRecordDao.updateOperateRecord(operateRecord);
     }
 }
