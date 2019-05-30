@@ -18,8 +18,7 @@ public class LocalCacheUtils<T> {
             concurrentMap.put(key, value);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("key为" + key + ",local插入失败", e);
+            log.error("com.yozo.loganalyse.commons.util.LocalCacheUtils.set,ERROR:{}", e);
             return false;
         }
     }
@@ -31,8 +30,7 @@ public class LocalCacheUtils<T> {
             }
             return concurrentMap.get(key);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("key为" + key + ",local获取失败", e);
+            log.error("com.yozo.loganalyse.commons.util.LocalCacheUtils.get,ERROR:{}", e);
             return null;
         }
     }
@@ -44,8 +42,7 @@ public class LocalCacheUtils<T> {
             }
             return concurrentMap.containsKey(key);
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("key为" + key + ",local判断存在失败", e);
+            log.error("com.yozo.loganalyse.commons.util.LocalCacheUtils.exists,ERROR:{}", e);
             return false;
         }
     }
@@ -56,7 +53,7 @@ public class LocalCacheUtils<T> {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("local清空失败", e);
+            log.error("com.yozo.loganalyse.commons.util.LocalCacheUtils.clearAll,ERROR:{}", e);
             return false;
         }
     }
@@ -69,8 +66,7 @@ public class LocalCacheUtils<T> {
             concurrentMap.remove(key);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
-            log.error("key为"+key+",local删除失败",e);
+            log.error("com.yozo.loganalyse.commons.util.LocalCacheUtils.delete,ERROR:{}", e);
             return false;
         }
     }
