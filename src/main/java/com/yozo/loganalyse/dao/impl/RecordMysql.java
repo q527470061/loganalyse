@@ -5,10 +5,13 @@ import com.yozo.loganalyse.mapper.OperateRecordMapper;
 import com.yozo.loganalyse.pojo.OperateRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@ConditionalOnExpression("'${loganalyse.dao.mysql}'.equals('true')")
 public class RecordMysql implements OperateRecordDao {
 
     @Autowired

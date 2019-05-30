@@ -7,4 +7,7 @@ public interface CommonConstant {
 
     //读取用户在线统计时间戳
     int ONLINEUNITTIME=1800000;
+
+    //redis存取临时日志时间--目前24小时
+    int REDIS_LOG_EXPIRE_TIME=86400000;
 }

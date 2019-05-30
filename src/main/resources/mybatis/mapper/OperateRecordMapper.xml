@@ -255,4 +255,16 @@
     and ip= #{ip,jdbcType=VARCHAR}
   </select>
 
+  <!--批量插入-->
+  <insert id="insertBatch" parameterType="java.util.List" >
+    insert into operate_record (id, user_id, app,
+    ip, online_time, area,
+    last_access_time)
+    <foreach collection="list" item="item" separator=",">
+      values (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=VARCHAR}, #{item.app,jdbcType=VARCHAR},
+      #{item.ip,jdbcType=VARCHAR}, #{item.onlineTime,jdbcType=DECIMAL}, #{item.area,jdbcType=VARCHAR},
+      #{item.lastAccessTime,jdbcType=TIMESTAMP})
+    </foreach>
+  </insert>
+
 </mapper>

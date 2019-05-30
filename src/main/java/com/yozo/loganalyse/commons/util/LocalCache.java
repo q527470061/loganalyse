@@ -17,11 +17,11 @@ public class LocalCache {
     /**
      * 默认缓存时长 单位s
      */
-    private static final int DEFAULT_TIMEOUT = 3600;
+    private static final int DEFAULT_TIMEOUT = 86400;
     /**
      * 默认缓存容量
      */
-    private static final int DEFAULT_SIZE = 1000;
+    private static final int DEFAULT_SIZE = 1000000000;
 
     /**
      * 存储数据

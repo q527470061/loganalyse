@@ -1,7 +1,9 @@
 package com.yozo.loganalyse.dao;
 
 import com.yozo.loganalyse.pojo.OperateRecord;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface OperateRecordDao {
 
 

@@ -37,4 +37,11 @@ public interface OperateRecordMapper {
     * @return com.yozo.loganalyse.pojo.OperateRecord
     */
     OperateRecord selectByComplexKeyAndDay(OperateRecord operateRecord);
+
+    /**
+     * 批量插入
+     * @param records
+     * @return
+     */
+    int insertBatch(List<OperateRecord> records);
 }
