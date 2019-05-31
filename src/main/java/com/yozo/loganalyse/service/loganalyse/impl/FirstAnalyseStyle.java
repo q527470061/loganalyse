@@ -35,6 +35,8 @@ public class FirstAnalyseStyle implements LogAnalyse {
     @Autowired
     private OperateRecordMapper operateRecordMapper;
 
+    @Value("${loganalyse.logs.path}")
+    private String collectLogs;
 
     @Value("${loganalyse.cache.enable}")
     private String enableCache;
@@ -47,8 +49,11 @@ public class FirstAnalyseStyle implements LogAnalyse {
         // 初始化日志容器
         List<OperateRecord> operateRecords=new ArrayList<>();
 
+        //准备文件
+        String[] logs=collectLogs.split(",");
+
         // 开始收集日志
-        for (String filePath:CommonConfig.LOG_PATHS){
+        for (String filePath:logs){
             String key=CommonUtils.generateKey(filePath);
             int lineNumber=0;
             if(cache.existKey(key)){
@@ -57,8 +62,12 @@ public class FirstAnalyseStyle implements LogAnalyse {
             logCollect.getCertainLineOfTxt(filePath,lineNumber,operateRecords);
         }
 
-        log.info("--------------------------------------------------一共日志记录数：{}-------------------------------------------",operateRecords.size());
+        int recordSize=operateRecords.size();
+        log.info("--------------------------------------------------一共日志记录数：{}-------------------------------------------",recordSize);
 
+        if(recordSize<=0){
+            return;
+        }
         // 分析存取有效日志
         operateRecords.stream()
                 .sorted(Comparator.comparing(OperateRecord::getLastAccessTime))

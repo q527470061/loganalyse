@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -76,11 +75,14 @@ public class FirstCollectStyle implements LogCollect {
     }
 
     public void test(){
-        String str="F:\\log\\auth3.log";
+/*        String str="F:\\log\\auth3.log";
         DateFormat df = DateFormat.getDateInstance();
         String key=df.format(new Date())+"-"+str;
         //File file=new File(str);
-        System.out.println(1000*60*30);
+        System.out.println(1000*60*30);*/
+        String s="/users/analyze/sso-node1/auth.log-20190530,/users/analyze/sso-node2/auth.log-20190530";
+        String[] logs=s.split(",");
+        System.out.println(logs[0]+"---"+logs[1]);
     }
 
 }

@@ -13,12 +13,21 @@ import java.util.Date;
 public class CommonUtils {
 
     /**
-     * 由日期组成的key
-     * @param dateKey
+     * 由日期组成的key,格式如下
+     * 2019-5-31-F:\log\auth4.log
+     *
+     * 成因：
+     *  1. 每日解析日志，路径和文件名相同即相同文件
+     *  2. 每日日期不同
+     *  3. 由于隔夜，key 本地日期-文件名生成策略，会出现错误解析
+     *
+     *  解决：
+     *   取出日志第一条记录，解析出日志当前日期
+     * @param path
      * @return
      */
-    public static String generateKey(String dateKey){
-        return DateFormat.getDateInstance().format(new Date())+"-"+dateKey;
+    public static String generateKey(String path){
+        return DateFormat.getDateInstance().format(new Date())+"-"+path;
     }
 
     /**
@@ -30,7 +39,15 @@ public class CommonUtils {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
         String dateStr=sdf.format(operateRecord.getLastAccessTime());
         StringBuilder stringBuilder=new StringBuilder();
-        stringBuilder.append(dateStr).append("-").append(operateRecord.getUserId()).append("-").append(operateRecord.getApp()).append("-").append(operateRecord.getIp());
+        stringBuilder
+                .append(dateStr)
+                .append("-")
+                .append(operateRecord.getUserId())
+                .append("-")
+                .append(operateRecord.getApp())
+                .append("-")
+                .append(operateRecord.getIp());
+
         return stringBuilder.toString();
     }
 
