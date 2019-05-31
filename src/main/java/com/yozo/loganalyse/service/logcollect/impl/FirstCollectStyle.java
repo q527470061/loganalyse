@@ -7,7 +7,6 @@ import com.yozo.loganalyse.pojo.OperateRecord;
 import com.yozo.loganalyse.service.cache.Cache;
 import com.yozo.loganalyse.service.logcollect.LogCollect;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,10 @@ import java.util.regex.Pattern;
 @Service
 public class FirstCollectStyle implements LogCollect {
 
-    //日志正则表达式模板
+    /**
+    * @description 日志正则表达式模板
+    * @author qinweiliang
+    */
     private String logPattern=SelfPattern.LOGPATTERN_SSO_OPERATE;
     @Autowired
     private Cache cache;
@@ -73,7 +75,6 @@ public class FirstCollectStyle implements LogCollect {
         }
     }
 
-    @Test
     public void test(){
         String str="F:\\log\\auth3.log";
         DateFormat df = DateFormat.getDateInstance();

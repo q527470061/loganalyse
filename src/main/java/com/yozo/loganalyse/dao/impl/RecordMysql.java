@@ -9,6 +9,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 @Slf4j
 @Service
 @ConditionalOnExpression("'${loganalyse.dao.mysql}'.equals('true')")
@@ -38,5 +41,10 @@ public class RecordMysql implements OperateRecordDao {
         }catch (Exception e){
             log.error("com.yozo.loganalyse.dao.impl.RecordMysql.updateOperateRecord,Error:{}",e);
         }
+    }
+
+    @Override
+    public List<OperateRecord> getRecordsByDate(Date date) {
+        return null;
     }
 }

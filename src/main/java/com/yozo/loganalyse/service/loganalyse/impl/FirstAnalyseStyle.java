@@ -4,6 +4,7 @@ import com.yozo.loganalyse.commons.cons.CommonConfig;
 import com.yozo.loganalyse.commons.cons.CommonConstant;
 import com.yozo.loganalyse.commons.util.CommonUtils;
 import com.yozo.loganalyse.dao.OperateRecordDao;
+import com.yozo.loganalyse.mapper.OperateRecordMapper;
 import com.yozo.loganalyse.pojo.OperateRecord;
 import com.yozo.loganalyse.service.cache.Cache;
 import com.yozo.loganalyse.service.loganalyse.LogAnalyse;
@@ -12,12 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+
+import java.util.*;
 
 /**
  * @author qinweiliang
@@ -32,6 +32,9 @@ public class FirstAnalyseStyle implements LogAnalyse {
     private LogCollect logCollect;
     @Autowired
     private Cache cache;
+    @Autowired
+    private OperateRecordMapper operateRecordMapper;
+
 
     @Value("${loganalyse.cache.enable}")
     private String enableCache;
@@ -62,7 +65,7 @@ public class FirstAnalyseStyle implements LogAnalyse {
                 .forEach((record -> writeRecord(record)));
 
         stopWatch.stop();
-        log.info("----------------------------------------------------执行完成，用时{}----------------------------------------------",stopWatch.getTotalTimeSeconds());
+        log.info("----------------------------------------------------收集分析执行完成，用时{}----------------------------------------------",stopWatch.getTotalTimeSeconds());
 
         // 如果采用localcache和redis，需要同步到mysql
         if("true".equals(enableCache)){
@@ -77,7 +80,6 @@ public class FirstAnalyseStyle implements LogAnalyse {
      */
     public void writeRecord(OperateRecord record){
         OperateRecord operateRecord=operateRecordDao.selectByComplexKeyAndDay(record);
-        //TODO
         // 数据库不存在记录
         if (null==operateRecord){
             record.setOnlineTime(0L);
@@ -95,8 +97,22 @@ public class FirstAnalyseStyle implements LogAnalyse {
         operateRecordDao.updateOperateRecord(operateRecord);
     }
 
-    // 同步缓存到mysql
-    public void synchronousMysql(Date time){
+    // 同步缓存到mysql，按日期同步
+    public void synchronousMysql(Date date){
+        StopWatch stopWatch=new StopWatch();
+        stopWatch.start();
+        List<OperateRecord> operateRecords=operateRecordDao.getRecordsByDate(date);
+        if (CollectionUtils.isEmpty(operateRecords)){
+            return;
+        }
+        System.out.println(operateRecords.size());
+        try {
+            operateRecordMapper.insertBatch(operateRecords);
+        }catch (Exception e){
+            log.error("com.yozo.loganalyse.service.loganalyse.impl.FirstAnalyseStyle.synchronousMysql,ERROR:{}",e);
+        }
+        stopWatch.stop();
+        log.info("----------------------------------------------------同步执行完成，用时{}----------------------------------------------",stopWatch.getTotalTimeSeconds());
 
     }
 

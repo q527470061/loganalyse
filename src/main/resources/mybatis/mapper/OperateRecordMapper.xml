@@ -260,8 +260,9 @@
     insert into operate_record (id, user_id, app,
     ip, online_time, area,
     last_access_time)
+    values
     <foreach collection="list" item="item" separator=",">
-      values (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=VARCHAR}, #{item.app,jdbcType=VARCHAR},
+      (#{item.id,jdbcType=BIGINT}, #{item.userId,jdbcType=VARCHAR}, #{item.app,jdbcType=VARCHAR},
       #{item.ip,jdbcType=VARCHAR}, #{item.onlineTime,jdbcType=DECIMAL}, #{item.area,jdbcType=VARCHAR},
       #{item.lastAccessTime,jdbcType=TIMESTAMP})
     </foreach>

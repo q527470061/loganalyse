@@ -9,9 +9,14 @@ import com.yozo.loganalyse.pojo.OperateRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -61,7 +66,19 @@ public class RecordRedis implements OperateRecordDao {
         }
     }
 
-
+    @Override
+    public List<OperateRecord> getRecordsByDate(Date date) {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");
+        String parttern=sdf.format(date)+"-*-*-*";
+        Set<String> set=redisUtil.keys(parttern);
+        List<OperateRecord> records=new ArrayList<>();
+        System.out.println("set--------------"+set.size());
+        for (String key:set){
+            OperateRecord record=JsonUtils.jsonToPojo((String) redisUtil.get(key),OperateRecord.class);
+            records.add(record);
+        }
+        return records;
+    }
 
 
 }

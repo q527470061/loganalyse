@@ -1,7 +1,7 @@
 package com.yozo.loganalyse.commons.util;
 
 import com.yozo.loganalyse.pojo.OperateRecord;
-import org.junit.Test;
+
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,7 +34,8 @@ public class CommonUtils {
         return stringBuilder.toString();
     }
 
-    @Test
+
+
     public void  test(){
         OperateRecord operateRecord=new OperateRecord();
         operateRecord.setUserId("w234ewe");

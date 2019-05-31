@@ -3,6 +3,9 @@ package com.yozo.loganalyse.dao;
 import com.yozo.loganalyse.pojo.OperateRecord;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+import java.util.List;
+
 @Repository
 public interface OperateRecordDao {
 
@@ -25,4 +28,9 @@ public interface OperateRecordDao {
      * @param record
      */
     void updateOperateRecord(OperateRecord record);
+
+    /**
+     *
+     */
+    List<OperateRecord> getRecordsByDate(Date date);
 }

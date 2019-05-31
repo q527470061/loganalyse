@@ -9,6 +9,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
+
 @Slf4j
 @Service
 @ConditionalOnExpression("'${loganalyse.dao.localcache}'.equals('true')")
@@ -43,5 +46,10 @@ public class RecordLocalCache implements OperateRecordDao {
     @Override
     public void updateOperateRecord(OperateRecord record) {
         insert(record);
+    }
+
+    @Override
+    public List<OperateRecord> getRecordsByDate(Date date) {
+        return null;
     }
 }
